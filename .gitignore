@@ -1,0 +1,27 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+
+# Configuration files that might contain sensitive information
+config/*.php
+
+# Dependency directories
+vendor/
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Uploaded files
+uploads/*
+!uploads/index.php
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
