@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (!empty($message)) {
             try {
-                $db->query(
+                $db->executeQuery(
                     "INSERT INTO chat_messages (course_id, user_id, message) VALUES (?, ?, ?)",
                     [$course_id, $user['id'], $message]
                 );
@@ -104,7 +104,7 @@ function updateUserPresence($db, $user_id, $course_id) {
     $session_id = session_id();
     
     // Clean old sessions first
-    $db->query(
+    $db->executeQuery(
         "DELETE FROM user_sessions WHERE last_activity < DATE_SUB(NOW(), INTERVAL 5 MINUTE)"
     );
     
@@ -115,12 +115,12 @@ function updateUserPresence($db, $user_id, $course_id) {
     );
     
     if ($existing) {
-        $db->query(
+        $db->executeQuery(
             "UPDATE user_sessions SET last_activity = NOW(), is_online = 1 WHERE id = ?",
             [$existing['id']]
         );
     } else {
-        $db->query(
+        $db->executeQuery(
             "INSERT INTO user_sessions (user_id, course_id, session_id, is_online) VALUES (?, ?, ?, 1) 
              ON DUPLICATE KEY UPDATE last_activity = NOW(), is_online = 1",
             [$user_id, $course_id, $session_id]

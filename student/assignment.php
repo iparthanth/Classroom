@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'submit' && !$
     // Submit if we have either text or file (depending on requirements)
     if (!empty($submission_text) || ($assignment['file_required'] && $file_path) || (!$assignment['file_required'])) {
         try {
-            $db->query(
+            $db->executeQuery(
                 "INSERT INTO submissions (assignment_id, student_id, submission_text, file_path) VALUES (?, ?, ?, ?)",
                 [$assignment_id, $user['id'], $submission_text, $file_path]
             );

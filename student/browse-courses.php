@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'enroll') {
     
     if (!$existing) {
         try {
-            $db->query(
+            $db->executeQuery(
                 "INSERT INTO enrollments (student_id, course_id) VALUES (?, ?)",
                 [$user['id'], $course_id]
             );

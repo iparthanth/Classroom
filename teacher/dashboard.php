@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'create_course
     
     if (!empty($title) && !empty($course_code)) {
         try {
-            $db->query(
+            $db->executeQuery(
                 "INSERT INTO courses (title, description, course_code, teacher_id, max_students) VALUES (?, ?, ?, ?, ?)",
                 [$title, $description, $course_code, $user['id'], $max_students]
             );

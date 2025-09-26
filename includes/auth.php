@@ -31,10 +31,9 @@ class Auth {
         }
         
         // Check if username or email already exists
-        $existing = $this->db->fetchOne(
-            "SELECT id FROM users WHERE username = ? OR email = ?",
-            [$username, $email]
-        );
+        $stmt = $this->db->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $stmt->execute([$username, $email]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($existing) {
             return ['success' => false, 'message' => 'Username or email already exists'];
@@ -61,10 +60,9 @@ class Auth {
         }
         
         // Find user by username or email
-        $user = $this->db->fetchOne(
-            "SELECT * FROM users WHERE (username = ? OR email = ?) AND is_active = 1",
-            [$username, $username]
-        );
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND is_active = 1");
+        $stmt->execute([$username, $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$user || !password_verify($password, $user['password'])) {
             return ['success' => false, 'message' => 'Invalid credentials'];
@@ -95,10 +93,9 @@ class Auth {
             return null;
         }
         
-        return $this->db->fetchOne(
-            "SELECT * FROM users WHERE id = ?",
-            [$_SESSION['user_id']]
-        );
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     public function hasRole($role) {

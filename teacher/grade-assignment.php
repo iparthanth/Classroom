@@ -303,7 +303,7 @@ $flash = getFlash();
                                     <div>
                                         <h4 style="font-weight: 600; margin-bottom: 10px;">File Submission</h4>
                                         <div class="submission-content">
-                                            <a href="../uploads/<?php echo htmlspecialchars($submission['file_path']); ?>" 
+                                            <a href="../download.php?id=<?php echo $submission['id']; ?>" 
                                                class="file-link" 
                                                target="_blank">
                                                 📎 View Submitted File

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'create_assign
     
     if (!empty($title) && !empty($due_date)) {
         try {
-            $db->query(
+            $db->executeQuery(
                 "INSERT INTO assignments (course_id, title, description, due_date, max_points, file_required) VALUES (?, ?, ?, ?, ?, ?)",
                 [$course_id, $title, $description, $due_date, $max_points, $file_required]
             );

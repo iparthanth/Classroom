@@ -115,7 +115,7 @@ $submissions = $db->fetchAll(
                                 <?php if($submission['file_path']): ?>
                                     <div>
                                         <h4 class="font-medium text-gray-700 mb-2">File Submission</h4>
-                                        <a href="../<?php echo htmlspecialchars($submission['file_path']); ?>" 
+                                        <a href="../download.php?id=<?php echo $submission['id']; ?>" 
                                            class="text-primary hover:text-blue-700 text-sm" 
                                            target="_blank">
                                             📎 View Submitted File
