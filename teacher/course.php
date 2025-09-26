@@ -2,7 +2,6 @@
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
 
-// Require teacher login
 $auth->requireRole('teacher');
 $user = $auth->getCurrentUser();
 
@@ -62,267 +61,95 @@ $flash = getFlash();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Course - <?php echo htmlspecialchars($course['title']); ?></title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .navbar {
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .brand { 
-            color: #7c3aed; 
-            font-weight: 700; 
-            font-size: 18px; 
-        }
-        .navbar a { 
-            text-decoration: none; 
-            color: #333; 
-            margin-left: 15px; 
-        }
-        .navbar a:hover { 
-            color: #7c3aed; 
-        }
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        .box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        .flash {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .flash.success { 
-            background: #d4edda; 
-            color: #155724; 
-            border: 1px solid #c3e6cb; 
-        }
-        .flash.error { 
-            background: #f8d7da; 
-            color: #721c24; 
-            border: 1px solid #f5c6cb; 
-        }
-        .grid {
-            display: grid;
-            gap: 20px;
-        }
-        .grid-2-cols {
-            grid-template-columns: 1fr 1fr;
-        }
-        .grid-4-cols {
-            grid-template-columns: repeat(4, 1fr);
-        }
-        @media (max-width: 768px) {
-            .grid-2-cols, .grid-4-cols {
-                grid-template-columns: 1fr;
-            }
-        }
-        h1 { 
-            color: #333;
-            font-size: 24px; 
-            margin: 0 0 10px; 
-        }
-        h2 { 
-            color: #333; 
-            font-size: 18px; 
-            margin: 0 0 15px; 
-        }
-        .course-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        .course-meta {
-            color: #666;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-        .btn-primary {
-            background: #7c3aed;
-            color: white;
-        }
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        .btn:hover {
-            opacity: 0.9;
-        }
-        .student-list, .assignment-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .student-card, .assignment-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .student-card:hover, .assignment-card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .student-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-        .student-meta, .assignment-meta {
-            color: #666;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .status-active {
-            background: #e6f4ea;
-            color: #1e7e34;
-        }
-        .status-closed {
-            background: #f8f9fa;
-            color: #6c757d;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 15px;
-            border-radius: 6px;
-            background: #fff;
-            border: 1px solid #ddd;
-        }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #7c3aed;
-        }
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .remove-btn {
-            color: #dc3545;
-            background: none;
-            border: none;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-        .remove-btn:hover {
-            background: #ffebee;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {theme: {extend: {colors: {primary: '#2563eb', secondary: '#10b981', accent: '#f59e0b'}}}}
+    </script>
 </head>
 <body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="navbar">
-        <div class="brand">Manage Course</div>
-        <div>
-            <a href="dashboard.php">Dashboard</a>
-            <span style="color: #666;">Hello, <?php echo htmlspecialchars($user['full_name']); ?></span>
-            <a href="../logout.php" style="color: #dc3545;">Logout</a>
+    <!-- Header styled like Railway Management System -->
+    <nav class="bg-white shadow-md border-b">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">E-Learning System</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.php" class="text-blue-600 hover:text-blue-800 font-medium">Dashboard</a>
+                    <span class="text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                    <a href="../logout.php" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="max-w-6xl mx-auto px-4 py-8">
         <!-- Flash Messages -->
         <?php if($flash): ?>
-            <div class="flash <?php echo $flash['type']; ?>">
+            <div class="mb-6 p-4 rounded-lg <?php echo $flash['type'] == 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'; ?>">
                 <?php echo $flash['message']; ?>
             </div>
         <?php endif; ?>
 
         <!-- Course Header -->
-        <div class="box">
-            <div class="course-header">
-                <div>
-                    <h1><?php echo htmlspecialchars($course['title']); ?></h1>
-                    <div class="course-meta"><?php echo htmlspecialchars($course['course_code']); ?></div>
-                    <div class="course-meta" style="white-space: pre-line;"><?php echo htmlspecialchars($course['description']); ?></div>
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-6">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4">
+                <div class="mb-4 lg:mb-0">
+                    <h1 class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($course['title']); ?></h1>
+                    <p class="text-gray-600"><?php echo htmlspecialchars($course['course_code']); ?></p>
+                    <p class="text-gray-600 mt-2"><?php echo htmlspecialchars($course['description']); ?></p>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-number"><?php echo count($students); ?></div>
-                    <div class="stat-label">Enrolled Students</div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-600"><?php echo count($students); ?></div>
+                    <div class="text-sm text-blue-700 font-medium">Enrolled Students</div>
                 </div>
             </div>
             
-            <div class="btn-group">
-                <a href="assignments.php?course_id=<?php echo $course_id; ?>" class="btn btn-primary">
+            <div class="flex flex-wrap gap-3">
+                <a href="assignments.php?course_id=<?php echo $course_id; ?>" 
+                   class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
                     📝 Manage Assignments
                 </a>
-                <a href="../whiteboard.php?course_id=<?php echo $course_id; ?>" class="btn btn-success">
+                <a href="../whiteboard.php?course_id=<?php echo $course_id; ?>" 
+                   class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium">
                     🎨 Whiteboard
                 </a>
-                <a href="../chat.php?course_id=<?php echo $course_id; ?>" class="btn btn-secondary">
+                <a href="../chat.php?course_id=<?php echo $course_id; ?>" 
+                   class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-medium">
                     💬 Chat
                 </a>
             </div>
         </div>
 
-        <div class="grid grid-2-cols">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Enrolled Students -->
-            <div class="box">
-                <h2>Enrolled Students (<?php echo count($students); ?>)</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Enrolled Students (<?php echo count($students); ?>)</h2>
                 
                 <?php if (empty($students)): ?>
-                    <div style="text-align: center; padding: 40px 0;">
-                        <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">👥</div>
-                        <p style="color: #666;">No students enrolled yet.</p>
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 text-6xl mb-4">👥</div>
+                        <p class="text-gray-500">No students enrolled yet.</p>
                     </div>
                 <?php else: ?>
-                    <div class="student-list">
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
                         <?php foreach ($students as $student): ?>
-                            <div class="student-card">
-                                <div class="student-name"><?php echo htmlspecialchars($student['full_name']); ?></div>
-                                <div class="student-meta"><?php echo htmlspecialchars($student['email']); ?></div>
-                                <div class="student-meta">Enrolled: <?php echo formatDateTime($student['enrolled_at']); ?></div>
-                                <div style="text-align: right; margin-top: 10px;">
-                                    <form method="POST" class="inline" onsubmit="return confirm('Remove this student from the course?')">
+                            <div class="border border-gray-300 rounded-lg p-4 hover:bg-blue-50 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-gray-800"><?php echo htmlspecialchars($student['full_name']); ?></h3>
+                                        <p class="text-sm text-gray-600"><?php echo htmlspecialchars($student['email']); ?></p>
+                                        <p class="text-xs text-gray-500 mt-1">Enrolled: <?php echo formatDateTime($student['enrolled_at']); ?></p>
+                                    </div>
+                                    <form method="POST" onsubmit="return confirm('Remove this student from the course?')">
                                         <input type="hidden" name="action" value="remove_student">
                                         <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
-                                        <button type="submit" class="remove-btn">Remove Student</button>
+                                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                            Remove
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -332,46 +159,47 @@ $flash = getFlash();
             </div>
 
             <!-- Assignments -->
-            <div class="box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="margin: 0;">Assignments (<?php echo count($assignments); ?>)</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Assignments (<?php echo count($assignments); ?>)</h2>
                     <a href="assignments.php?course_id=<?php echo $course_id; ?>" 
-                       style="color: #7c3aed; text-decoration: none;">View All</a>
+                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a>
                 </div>
                 
                 <?php if (empty($assignments)): ?>
-                    <div style="text-align: center; padding: 40px 0;">
-                        <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">📋</div>
-                        <p style="color: #666; margin-bottom: 15px;">No assignments created yet.</p>
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 text-6xl mb-4">📋</div>
+                        <p class="text-gray-500 mb-4">No assignments created yet.</p>
                         <a href="assignments.php?course_id=<?php echo $course_id; ?>" 
-                           class="btn btn-primary">Create Assignment</a>
+                           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                            Create Assignment
+                        </a>
                     </div>
                 <?php else: ?>
-                    <div class="assignment-list">
-                        <?php foreach ($assignments as $assignment): ?>
-                            <div class="assignment-card">
-                                <div style="display: flex; justify-content: space-between;">
-                                    <div>
-                                        <div class="student-name"><?php echo htmlspecialchars($assignment['title']); ?></div>
-                                        <div class="assignment-meta">Due: <?php echo formatDateTime($assignment['due_date']); ?></div>
-                                        <div class="assignment-meta">
-                                            <?php echo $assignment['submission_count']; ?> submissions • 
-                                            <?php echo $assignment['max_points']; ?> points
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <?php if (strtotime($assignment['due_date']) < time()): ?>
-                                            <span class="status-badge status-closed">Closed</span>
-                                        <?php else: ?>
-                                            <span class="status-badge status-active">Active</span>
-                                        <?php endif; ?>
-                                    </div>
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        <?php foreach ($assignments as $assignment): 
+                            $isActive = strtotime($assignment['due_date']) > time();
+                        ?>
+                            <div class="border border-gray-300 rounded-lg p-4 hover:bg-blue-50 transition-colors">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-gray-800"><?php echo htmlspecialchars($assignment['title']); ?></h3>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium <?php echo $isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
+                                        <?php echo $isActive ? 'Active' : 'Closed'; ?>
+                                    </span>
                                 </div>
-                                <div class="btn-group" style="margin-top: 10px;">
+                                <div class="text-sm text-gray-600 mb-3">
+                                    <p>Due: <?php echo formatDateTime($assignment['due_date']); ?></p>
+                                    <p><?php echo $assignment['submission_count']; ?> submissions • <?php echo $assignment['max_points']; ?> points</p>
+                                </div>
+                                <div class="flex gap-2">
                                     <a href="grade-assignment.php?id=<?php echo $assignment['id']; ?>" 
-                                       class="btn btn-primary">Grade</a>
+                                       class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 font-medium">
+                                        Grade
+                                    </a>
                                     <a href="assignments.php?course_id=<?php echo $course_id; ?>&edit=<?php echo $assignment['id']; ?>" 
-                                       class="btn btn-secondary">Edit</a>
+                                       class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 font-medium">
+                                        Edit
+                                    </a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -381,24 +209,22 @@ $flash = getFlash();
         </div>
 
         <!-- Course Statistics -->
-        <div class="stats-grid grid-4-cols" style="margin-top: 30px;">
-            <div class="stat-box">
-                <div class="stat-number"><?php echo $course['max_students']; ?></div>
-                <div class="stat-label">Max Capacity</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-blue-50 border border-blue-300 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-600"><?php echo $course['max_students']; ?></div>
+                <div class="text-sm text-blue-700 font-medium">Max Capacity</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-number"><?php echo count($students); ?></div>
-                <div class="stat-label">Current Students</div>
+            <div class="bg-green-50 border border-green-300 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-600"><?php echo count($students); ?></div>
+                <div class="text-sm text-green-700 font-medium">Current Students</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-number"><?php echo count($assignments); ?></div>
-                <div class="stat-label">Assignments</div>
+            <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-yellow-600"><?php echo count($assignments); ?></div>
+                <div class="text-sm text-yellow-700 font-medium">Assignments</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-number">
-                    <?php echo array_sum(array_column($assignments, 'submission_count')); ?>
-                </div>
-                <div class="stat-label">Total Submissions</div>
+            <div class="bg-purple-50 border border-purple-300 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-purple-600"><?php echo array_sum(array_column($assignments, 'submission_count')); ?></div>
+                <div class="text-sm text-purple-700 font-medium">Total Submissions</div>
             </div>
         </div>
     </div>

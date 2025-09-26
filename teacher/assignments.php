@@ -62,258 +62,125 @@ $flash = getFlash();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignments - <?php echo htmlspecialchars($course['title']); ?></title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .navbar {
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .brand { color: #7c3aed; font-weight: 700; font-size: 18px; }
-        .navbar a { text-decoration: none; color: #333; margin-left: 15px; }
-        .navbar a:hover { color: #7c3aed; }
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        .flash {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .flash.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .flash.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .course-info {
-            background: #7c3aed;
-            color: white;
-            padding: 25px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-        .box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-        h1 { color: #7c3aed; font-size: 24px; margin: 0 0 10px; }
-        h2 { color: #333; font-size: 18px; margin: 0 0 15px; }
-        h3 { color: #333; font-size: 16px; margin: 0 0 10px; }
-        .assignment-item {
-            border: 1px solid #eee;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .assignment-item:hover { background: #f8f9fa; }
-        .btn {
-            background: #7c3aed;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-block;
-        }
-        .btn:hover { background: #6b21d1; }
-        .btn-create {
-            background: #28a745;
-            margin-bottom: 20px;
-        }
-        .btn-create:hover { background: #218838; }
-        .btn-success {
-            background: #28a745;
-            font-size: 12px;
-            padding: 4px 8px;
-        }
-        .btn-success:hover { background: #218838; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .empty-state {
-            text-align: center;
-            color: #666;
-            padding: 30px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-        .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 20px;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 6px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        .badge {
-            background: #007bff;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-        }
-        .badge.file-required { background: #17a2b8; }
-        .assignment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 10px;
-        }
-        .assignment-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-            font-size: 12px;
-            color: #666;
-        }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .form-actions button { flex: 1; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {theme: {extend: {colors: {primary: '#2563eb', secondary: '#10b981', accent: '#f59e0b'}}}}
+    </script>
 </head>
-<body>
-    <div class="navbar">
-        <div class="brand">📝 Assignments - <?php echo htmlspecialchars($course['course_code']); ?></div>
-        <div>
-            <a href="dashboard.php">Back to Dashboard</a>
-            <a href="../logout.php">Logout</a>
+<body class="bg-gray-50">
+    <!-- Header styled like Railway Management System -->
+    <nav class="bg-white shadow-md border-b">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">E-Learning System</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.php" class="text-blue-600 hover:text-blue-800 font-medium">Dashboard</a>
+                    <span class="text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                    <a href="../logout.php" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</a>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="container">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Flash Messages -->
         <?php if($flash): ?>
-            <div class="flash <?php echo $flash['type']; ?>">
-                <?php echo htmlspecialchars($flash['message']); ?>
+            <div class="mb-6 p-4 rounded-lg <?php echo $flash['type'] == 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'; ?>">
+                <?php echo $flash['message']; ?>
             </div>
         <?php endif; ?>
 
-        <div class="course-info">
-            <h1><?php echo htmlspecialchars($course['title']); ?></h1>
-            <p><?php echo htmlspecialchars($course['description']); ?></p>
+        <!-- Course Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl shadow-lg p-6 mb-6 text-center">
+            <h1 class="text-2xl font-bold mb-2"><?php echo htmlspecialchars($course['title']); ?></h1>
+            <p class="text-blue-100"><?php echo htmlspecialchars($course['description']); ?></p>
+            <p class="text-blue-200 text-sm mt-2"><?php echo htmlspecialchars($course['course_code']); ?></p>
         </div>
 
-        <div class="content">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Main Content -->
-            <div>
-                <button class="btn btn-create" onclick="showCreateAssignment()">➕ Create New Assignment</button>
-                
-                <div class="box">
-                    <h2>Course Assignments</h2>
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Course Assignments</h2>
+                        <button onclick="showCreateAssignment()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium">
+                            ➕ Create New Assignment
+                        </button>
+                    </div>
                     
                     <?php if(empty($assignments)): ?>
-                        <div class="empty-state">
-                            <p>No assignments created yet.</p>
-                            <button class="btn btn-create" onclick="showCreateAssignment()">Create Your First Assignment</button>
+                        <div class="text-center py-12">
+                            <div class="text-gray-400 text-6xl mb-4">📋</div>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">No assignments created yet</h3>
+                            <p class="text-gray-500 mb-4">Create your first assignment to get started.</p>
+                            <button onclick="showCreateAssignment()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-medium">
+                                Create Your First Assignment
+                            </button>
                         </div>
                     <?php else: ?>
-                        <?php foreach($assignments as $assignment): ?>
-                            <div class="assignment-item">
-                                <div class="assignment-header">
-                                    <div>
-                                        <h3><?php echo htmlspecialchars($assignment['title']); ?></h3>
-                                        <div style="margin: 5px 0;">
-                                            <span class="badge"><?php echo $assignment['max_points']; ?> points</span>
-                                            <?php if($assignment['file_required']): ?>
-                                                <span class="badge file-required">File Required</span>
-                                            <?php endif; ?>
+                        <div class="space-y-4">
+                            <?php foreach($assignments as $assignment): ?>
+                                <div class="border border-gray-300 rounded-lg p-5 hover:bg-blue-50 transition-colors">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($assignment['title']); ?></h3>
+                                            <div class="flex items-center space-x-2 mt-1">
+                                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                    <?php echo $assignment['max_points']; ?> points
+                                                </span>
+                                                <?php if($assignment['file_required']): ?>
+                                                    <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                        File Required
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <p style="color: #666; margin: 10px 0;"><?php echo htmlspecialchars($assignment['description']); ?></p>
-                                
-                                <div class="assignment-footer">
-                                    <div>
-                                        <strong>Due:</strong> <?php echo formatDateTime($assignment['due_date']); ?>
+                                    
+                                    <?php if($assignment['description']): ?>
+                                        <p class="text-gray-600 text-sm mb-3"><?php echo htmlspecialchars($assignment['description']); ?></p>
+                                    <?php endif; ?>
+                                    
+                                    <div class="flex justify-between items-center text-sm text-gray-500 mb-3">
+                                        <span><strong>Due:</strong> <?php echo formatDateTime($assignment['due_date']); ?></span>
+                                        <span><?php echo $assignment['submission_count']; ?> / <?php echo $assignment['total_students']; ?> submitted</span>
                                     </div>
-                                    <div>
-                                        <?php echo $assignment['submission_count']; ?> / <?php echo $assignment['total_students']; ?> submitted
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-top: 10px;">
-                                    <a href="grade-assignment.php?id=<?php echo $assignment['id']; ?>" class="btn btn-success">
+                                    
+                                    <a href="grade-assignment.php?id=<?php echo $assignment['id']; ?>" 
+                                       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium inline-block">
                                         View Submissions
                                     </a>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
 
             <!-- Sidebar -->
-            <div>
-                <div class="box">
-                    <h2>Course Stats</h2>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span>Total Assignments</span>
-                            <strong><?php echo count($assignments); ?></strong>
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Course Stats</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-600"><?php echo count($assignments); ?></div>
+                            <div class="text-sm text-blue-700 font-medium">Total Assignments</div>
                         </div>
-                        <div class="stat-item">
-                            <span>Total Submissions</span>
-                            <strong><?php echo array_sum(array_column($assignments, 'submission_count')); ?></strong>
+                        
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-600"><?php echo array_sum(array_column($assignments, 'submission_count')); ?></div>
+                            <div class="text-sm text-green-700 font-medium">Total Submissions</div>
                         </div>
-                        <div class="stat-item">
-                            <span>Students Enrolled</span>
-                            <strong><?php echo !empty($assignments) ? $assignments[0]['total_students'] : 0; ?></strong>
+                        
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-purple-600"><?php echo !empty($assignments) ? $assignments[0]['total_students'] : 0; ?></div>
+                            <div class="text-sm text-purple-700 font-medium">Students Enrolled</div>
                         </div>
                     </div>
                 </div>
@@ -322,47 +189,59 @@ $flash = getFlash();
     </div>
 
     <!-- Create Assignment Modal -->
-    <div id="createAssignmentModal" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>Create New Assignment</h2>
-                <button onclick="hideCreateAssignment()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+    <div id="createAssignmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Create New Assignment</h2>
+                <button onclick="hideCreateAssignment()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             </div>
             
             <form method="POST">
                 <input type="hidden" name="action" value="create_assignment">
                 
-                <div class="form-group">
-                    <label>Assignment Title</label>
-                    <input type="text" name="title" placeholder="e.g., Programming Quiz 1" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description" placeholder="Assignment instructions and details..."></textarea>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Due Date</label>
-                        <input type="datetime-local" name="due_date" required>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Assignment Title</label>
+                        <input type="text" name="title" placeholder="e.g., Programming Quiz 1" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
-                    <div class="form-group">
-                        <label>Max Points</label>
-                        <input type="number" name="max_points" value="100" min="1" max="1000">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea name="description" placeholder="Assignment instructions and details..." 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-24"></textarea>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; cursor: pointer;">
-                        <input type="checkbox" name="file_required" style="margin-right: 8px; width: auto;">
-                        Require file upload from students
-                    </label>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn">Create Assignment</button>
-                    <button type="button" onclick="hideCreateAssignment()" class="btn" style="background: #6c757d;">Cancel</button>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                            <input type="datetime-local" name="due_date" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Max Points</label>
+                            <input type="number" name="max_points" value="100" min="1" max="1000" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" name="file_required" id="file_required" 
+                               class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="file_required" class="ml-2 block text-sm text-gray-700">
+                            Require file upload from students
+                        </label>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-2">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                            Create Assignment
+                        </button>
+                        <button type="button" onclick="hideCreateAssignment()" 
+                                class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 font-medium">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -370,20 +249,19 @@ $flash = getFlash();
 
     <script>
         function showCreateAssignment() {
-            document.getElementById('createAssignmentModal').style.display = 'block';
+            document.getElementById('createAssignmentModal').classList.remove('hidden');
         }
         
         function hideCreateAssignment() {
-            document.getElementById('createAssignmentModal').style.display = 'none';
+            document.getElementById('createAssignmentModal').classList.add('hidden');
         }
 
         // Close modal when clicking outside
-        window.onclick = function(event) {
-            var modal = document.getElementById('createAssignmentModal');
-            if (event.target === modal) {
+        document.getElementById('createAssignmentModal').addEventListener('click', function(event) {
+            if (event.target === this) {
                 hideCreateAssignment();
             }
-        }
+        });
     </script>
 </body>
 </html>

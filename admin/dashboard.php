@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch stats
 $stats = $db->fetchAll("
-    SELECT 'total_users' AS key, COUNT(*) AS value FROM users
+    SELECT 'total_users' AS stat_key, COUNT(*) AS value FROM users
     UNION ALL SELECT 'total_students', COUNT(*) FROM users WHERE role='student'
     UNION ALL SELECT 'total_teachers', COUNT(*) FROM users WHERE role='teacher'
     UNION ALL SELECT 'total_courses', COUNT(*) FROM courses
     UNION ALL SELECT 'total_assignments', COUNT(*) FROM assignments
     UNION ALL SELECT 'total_submissions', COUNT(*) FROM submissions
-", [], PDO::FETCH_KEY_PAIR);
+");
 
 // Fetch recent users and active courses
 $recent_users   = $db->fetchAll("SELECT * FROM users ORDER BY created_at DESC LIMIT 10");
@@ -105,10 +105,25 @@ $flash = getFlash();
         </div>
 
         <div class="stats-grid">
-            <?php foreach($stats as $key => $val): ?>
+            <?php 
+            $statResults = [];
+            foreach($stats as $row) {
+                $statResults[$row['stat_key']] = $row['value'];
+            }
+            
+            $displayStats = [
+                'total_users' => 'Total Users',
+                'total_students' => 'Total Students',
+                'total_teachers' => 'Total Teachers',
+                'total_courses' => 'Total Courses',
+                'total_assignments' => 'Total Assignments',
+                'total_submissions' => 'Total Submissions'
+            ];
+            
+            foreach($displayStats as $key => $label): ?>
                 <div class="stat-box">
-                    <div class="stat-label"><?=ucwords(str_replace('_',' ',$key))?></div>
-                    <div class="stat-value"><?=$val?></div>
+                    <div class="stat-label"><?=$label?></div>
+                    <div class="stat-value"><?=isset($statResults[$key]) ? $statResults[$key] : 0?></div>
                 </div>
             <?php endforeach; ?>
         </div>

@@ -2,7 +2,6 @@
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
 
-// Require teacher login
 $auth->requireRole('teacher');
 $user = $auth->getCurrentUser();
 
@@ -63,291 +62,163 @@ $flash = getFlash();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade Assignment - <?php echo htmlspecialchars($assignment['title']); ?></title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .navbar {
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .brand { color: #7c3aed; font-weight: 700; font-size: 18px; }
-        .navbar a { text-decoration: none; color: #333; margin-left: 15px; }
-        .navbar a:hover { color: #7c3aed; }
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        .box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        .flash {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .flash.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .flash.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        h1 { color: #7c3aed; font-size: 24px; margin: 0 0 10px; }
-        h2 { color: #333; font-size: 18px; margin: 0 0 15px; }
-        h3 { color: #333; font-size: 16px; margin: 0 0 10px; }
-        .submission-item {
-            border: 1px solid #eee;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .submission-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 10px;
-        }
-        .student-info {
-            flex: 1;
-        }
-        .grade-status {
-            text-align: right;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 14px;
-        }
-        .grade-status.pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .grade-status.graded {
-            background: #d4edda;
-            color: #155724;
-        }
-        .submission-content {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        .btn {
-            background: #7c3aed;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn:hover { background: #6b21d1; }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 15px;
-            border-radius: 6px;
-        }
-        .stat-box .number {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .stat-box .label {
-            color: #666;
-            font-size: 14px;
-        }
-        .stat-box.blue { background: #e8f0fe; }
-        .stat-box.green { background: #e6f4ea; }
-        .stat-box.yellow { background: #fef3c7; }
-        .stat-box.purple { background: #f3e8ff; }
-        .feedback-box {
-            background: #e8f0fe;
-            border-left: 4px solid #7c3aed;
-            padding: 10px 15px;
-            margin: 10px 0;
-            border-radius: 0 4px 4px 0;
-        }
-        .file-link {
-            display: inline-flex;
-            align-items: center;
-            color: #7c3aed;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .file-link:hover {
-            background: #f8f9fa;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {theme: {extend: {colors: {primary: '#2563eb', secondary: '#10b981', accent: '#f59e0b'}}}}
+    </script>
 </head>
 <body class="bg-gray-50">
-    <div class="navbar">
-        <div class="brand">🎓 Grade Assignment</div>
-        <div>
-            <a href="dashboard.php">Dashboard</a>
-            <span style="color: #666;">Hello, <?php echo htmlspecialchars($user['full_name']); ?></span>
-            <a href="../logout.php" style="color: #dc3545;">Logout</a>
+    <!-- Header styled like Railway Management System -->
+    <nav class="bg-white shadow-md border-b">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">E-Learning System</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.php" class="text-blue-600 hover:text-blue-800 font-medium">Dashboard</a>
+                    <span class="text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                    <a href="../logout.php" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</a>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="container">
+    <div class="max-w-6xl mx-auto px-4 py-8">
         <!-- Flash Messages -->
         <?php if($flash): ?>
-            <div class="flash <?php echo $flash['type']; ?>">
+            <div class="mb-6 p-4 rounded-lg <?php echo $flash['type'] == 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'; ?>">
                 <?php echo $flash['message']; ?>
             </div>
         <?php endif; ?>
 
         <!-- Assignment Header -->
-        <div class="box">
-            <h1><?php echo htmlspecialchars($assignment['title']); ?></h1>
-            <p style="color: #666;"><?php echo htmlspecialchars($assignment['course_title']); ?></p>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px;">
-                <div>
-                    <span style="color: #666;">Due Date:</span>
-                    <span style="font-weight: 600;"><?php echo formatDateTime($assignment['due_date']); ?></span>
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2"><?php echo htmlspecialchars($assignment['title']); ?></h1>
+            <p class="text-gray-600"><?php echo htmlspecialchars($assignment['course_title']); ?></p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div class="bg-blue-50 border border-blue-200 rounded p-3 text-center">
+                    <div class="text-sm text-blue-700 font-medium">Due Date</div>
+                    <div class="font-bold text-blue-600"><?php echo formatDateTime($assignment['due_date']); ?></div>
                 </div>
-                <div>
-                    <span style="color: #666;">Max Points:</span>
-                    <span style="font-weight: 600;"><?php echo $assignment['max_points']; ?></span>
+                <div class="bg-green-50 border border-green-200 rounded p-3 text-center">
+                    <div class="text-sm text-green-700 font-medium">Max Points</div>
+                    <div class="font-bold text-green-600"><?php echo $assignment['max_points']; ?></div>
                 </div>
-                <div>
-                    <span style="color: #666;">Submissions:</span>
-                    <span style="font-weight: 600;"><?php echo count($submissions); ?></span>
+                <div class="bg-purple-50 border border-purple-200 rounded p-3 text-center">
+                    <div class="text-sm text-purple-700 font-medium">Submissions</div>
+                    <div class="font-bold text-purple-600"><?php echo count($submissions); ?></div>
                 </div>
             </div>
+            
             <?php if($assignment['description']): ?>
-                <div style="margin-top: 15px;">
-                    <span style="color: #666; font-size: 14px;">Description:</span>
-                    <p style="margin-top: 5px;"><?php echo nl2br(htmlspecialchars($assignment['description'])); ?></p>
+                <div class="mt-4">
+                    <h3 class="font-medium text-gray-700 mb-2">Description</h3>
+                    <p class="text-gray-600"><?php echo nl2br(htmlspecialchars($assignment['description'])); ?></p>
                 </div>
             <?php endif; ?>
         </div>
 
         <!-- Submissions -->
-        <div class="box">
-            <h2>Student Submissions (<?php echo count($submissions); ?>)</h2>
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Student Submissions (<?php echo count($submissions); ?>)</h2>
             
             <?php if (empty($submissions)): ?>
-                <div style="text-align: center; padding: 40px 0;">
-                    <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">📋</div>
-                    <h3 style="font-size: 20px; color: #333; margin-bottom: 10px;">No submissions yet</h3>
-                    <p style="color: #666;">Students haven't submitted their work for this assignment.</p>
+                <div class="text-center py-12">
+                    <div class="text-gray-400 text-6xl mb-4">📋</div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">No submissions yet</h3>
+                    <p class="text-gray-500">Students haven't submitted their work for this assignment.</p>
                 </div>
             <?php else: ?>
-                <?php foreach ($submissions as $submission): ?>
-                    <div class="submission-item">
-                        <div class="submission-info">
-                            <div class="student-info">
-                                <h3><?php echo htmlspecialchars($submission['full_name']); ?></h3>
-                                <p style="color: #666; font-size: 14px;"><?php echo htmlspecialchars($submission['email']); ?></p>
-                                <p style="color: #666; font-size: 12px;">Submitted: <?php echo formatDateTime($submission['submitted_at']); ?></p>
-                            </div>
-                            <div>
-                                <?php if ($submission['points_awarded'] !== null): ?>
-                                    <div class="grade-status graded">
-                                        Graded: <?php echo $submission['points_awarded']; ?>/<?php echo $assignment['max_points']; ?>
-                                    </div>
-                                    <?php if ($submission['graded_at']): ?>
-                                        <p style="font-size: 12px; color: #666; margin-top: 5px; text-align: right;">
-                                            Graded: <?php echo formatDateTime($submission['graded_at']); ?>
-                                        </p>
+                <div class="space-y-6">
+                    <?php foreach ($submissions as $submission): 
+                        $isGraded = $submission['points_awarded'] !== null;
+                    ?>
+                        <div class="border border-gray-300 rounded-lg p-5 hover:bg-blue-50 transition-colors">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($submission['full_name']); ?></h3>
+                                    <p class="text-sm text-gray-600"><?php echo htmlspecialchars($submission['email']); ?></p>
+                                    <p class="text-xs text-gray-500 mt-1">Submitted: <?php echo formatDateTime($submission['submitted_at']); ?></p>
+                                </div>
+                                <div class="text-right">
+                                    <?php if ($isGraded): ?>
+                                        <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                                            Graded: <?php echo $submission['points_awarded']; ?>/<?php echo $assignment['max_points']; ?>
+                                        </div>
+                                        <?php if ($submission['graded_at']): ?>
+                                            <p class="text-xs text-gray-500 mt-1">Graded: <?php echo formatDateTime($submission['graded_at']); ?></p>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                                            Pending Grade
+                                        </div>
                                     <?php endif; ?>
-                                <?php else: ?>
-                                    <div class="grade-status pending">
-                                        Pending Grade
-                                    </div>
-                                <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
                             
                             <!-- Submission Content -->
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
-                                <!-- Text Submission -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <?php if ($submission['submission_text']): ?>
                                     <div>
-                                        <h4 style="font-weight: 600; margin-bottom: 10px;">Text Submission</h4>
-                                        <div class="submission-content">
+                                        <h4 class="font-medium text-gray-700 mb-2">Text Submission</h4>
+                                        <div class="bg-gray-50 p-3 rounded border text-sm">
                                             <?php echo nl2br(htmlspecialchars($submission['submission_text'])); ?>
                                         </div>
                                     </div>
                                 <?php endif; ?>
                                 
-                                <!-- File Submission -->
                                 <?php if ($submission['file_path']): ?>
                                     <div>
-                                        <h4 style="font-weight: 600; margin-bottom: 10px;">File Submission</h4>
-                                        <div class="submission-content">
-                                            <a href="../download.php?id=<?php echo $submission['id']; ?>" 
-                                               class="file-link" 
-                                               target="_blank">
-                                                📎 View Submitted File
-                                            </a>
-                                        </div>
+                                        <h4 class="font-medium text-gray-700 mb-2">File Submission</h4>
+                                        <a href="../download.php?id=<?php echo $submission['id']; ?>" 
+                                           class="text-blue-600 hover:text-blue-800 text-sm font-medium" 
+                                           target="_blank">
+                                            📎 View Submitted File
+                                        </a>
                                     </div>
                                 <?php endif; ?>
                             </div>
                             
                             <!-- Current Feedback (if any) -->
                             <?php if ($submission['feedback']): ?>
-                                <div style="margin: 15px 0;">
-                                    <h4 style="font-weight: 600; margin-bottom: 10px;">Current Feedback</h4>
-                                    <div class="feedback-box">
+                                <div class="mb-4">
+                                    <h4 class="font-medium text-gray-700 mb-2">Current Feedback</h4>
+                                    <div class="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r text-sm">
                                         <?php echo nl2br(htmlspecialchars($submission['feedback'])); ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
                             
                             <!-- Grading Form -->
-                            <form method="POST" style="border-top: 1px solid #eee; padding-top: 20px;">
+                            <form method="POST" class="border-t pt-4">
                                 <input type="hidden" name="action" value="grade_submission">
                                 <input type="hidden" name="submission_id" value="<?php echo $submission['id']; ?>">
                                 
-                                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
-                                    <div class="form-group">
-                                        <label>Points (0-<?php echo $assignment['max_points']; ?>)</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Points (0-<?php echo $assignment['max_points']; ?>)</label>
                                         <input type="number" name="points" 
                                                value="<?php echo $submission['points_awarded'] ?? ''; ?>"
                                                min="0" max="<?php echo $assignment['max_points']; ?>"
-                                               class="form-control"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                required>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Feedback (Optional)</label>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Feedback (Optional)</label>
                                         <textarea name="feedback" rows="3" 
-                                                  class="form-control"
+                                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                   placeholder="Provide feedback to the student..."><?php echo htmlspecialchars($submission['feedback'] ?? ''); ?></textarea>
                                     </div>
                                 </div>
                                 
-                                <div style="margin-top: 15px;">
-                                    <button type="submit" class="btn">
-                                        <?php echo $submission['points_awarded'] !== null ? 'Update Grade' : 'Save Grade'; ?>
+                                <div class="mt-4">
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                                        <?php echo $isGraded ? 'Update Grade' : 'Save Grade'; ?>
                                     </button>
                                 </div>
                             </form>
@@ -356,36 +227,28 @@ $flash = getFlash();
                 </div>
                 
                 <!-- Grading Summary -->
-                <div class="stats-grid">
-                    <div class="stat-box blue">
-                        <div class="number"><?php echo count($submissions); ?></div>
-                        <div class="label">Total Submissions</div>
+                <?php
+                $gradedCount = count(array_filter($submissions, function($s) { return $s['points_awarded'] !== null; }));
+                $pendingCount = count(array_filter($submissions, function($s) { return $s['points_awarded'] === null; }));
+                $graded = array_filter($submissions, function($s) { return $s['points_awarded'] !== null; });
+                $average = count($graded) > 0 ? round(array_sum(array_map(function($s) { return $s['points_awarded']; }, $graded)) / count($graded), 1) : 'N/A';
+                ?>
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-blue-50 border border-blue-300 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-blue-600"><?php echo count($submissions); ?></div>
+                        <div class="text-sm text-blue-700 font-medium">Total Submissions</div>
                     </div>
-                    <div class="stat-box green">
-                        <div class="number">
-                            <?php echo count(array_filter($submissions, function($s) { return $s['points_awarded'] !== null; })); ?>
-                        </div>
-                        <div class="label">Graded</div>
+                    <div class="bg-green-50 border border-green-300 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600"><?php echo $gradedCount; ?></div>
+                        <div class="text-sm text-green-700 font-medium">Graded</div>
                     </div>
-                    <div class="stat-box yellow">
-                        <div class="number">
-                            <?php echo count(array_filter($submissions, function($s) { return $s['points_awarded'] === null; })); ?>
-                        </div>
-                        <div class="label">Pending</div>
+                    <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-yellow-600"><?php echo $pendingCount; ?></div>
+                        <div class="text-sm text-yellow-700 font-medium">Pending</div>
                     </div>
-                    <div class="stat-box purple">
-                        <div class="number">
-                            <?php 
-                            $graded = array_filter($submissions, function($s) { return $s['points_awarded'] !== null; });
-                            if(count($graded) > 0) {
-                                $average = array_sum(array_map(function($s) { return $s['points_awarded']; }, $graded)) / count($graded);
-                                echo round($average, 1);
-                            } else {
-                                echo 'N/A';
-                            }
-                            ?>
-                        </div>
-                        <div class="label">Average Score</div>
+                    <div class="bg-purple-50 border border-purple-300 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-purple-600"><?php echo $average; ?></div>
+                        <div class="text-sm text-purple-700 font-medium">Average Score</div>
                     </div>
                 </div>
             <?php endif; ?>
