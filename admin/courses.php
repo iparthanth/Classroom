@@ -117,7 +117,6 @@ $courses = $db->fetchAll("
                                         <?= $c['is_active'] ? 'Deactivate' : 'Activate' ?>
                                     </button>
                                 </form>
-                                <a class="btn" style="color:#0066cc" href="course-details.php?id=<?=$c['id']?>">View Details</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

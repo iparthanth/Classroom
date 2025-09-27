@@ -30,129 +30,136 @@ $assignments = $db->fetchAll("
     <meta charset="UTF-8" />
     <title>Student Dashboard</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:Arial,sans-serif;background:#f5f5f5}
-        .navbar{background:#fff;border-bottom:1px solid #ddd;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
-        .brand{color:#28a745;font-weight:700;font-size:18px}
-        .navbar a{color:#333;text-decoration:none;margin-left:15px}
-        .navbar a:hover{color:#28a745}
-        .container{max-width:1000px;margin:20px auto;padding:0 20px}
-        .welcome-box{background:#28a745;color:#fff;padding:25px;border-radius:6px;margin-bottom:20px;text-align:center}
-        .content{display:grid;grid-template-columns:2fr 1fr;gap:20px}
-        .box{background:#fff;padding:20px;border-radius:6px;border:1px solid #ddd}
-        h1{color:#28a745;font-size:24px;margin-bottom:10px}
-        h2{color:#333;font-size:18px;margin-bottom:15px}
-        h3{color:#333;font-size:16px;margin-bottom:10px}
-        .course-item, .assignment-item{border:1px solid #eee;border-radius:4px;padding:15px;margin-bottom:10px;transition:background-color 0.2s ease}
-        .course-item:hover, .assignment-item:hover{background:#f8f9fa}
-        .course-links a{display:inline-block;background:#28a745;color:#fff;padding:5px 12px;text-decoration:none;border-radius:4px;font-size:12px;margin-right:5px;margin-top:8px}
-        .course-links a:hover{background:#218838}
-        .stats-grid{display:grid;grid-template-columns:1fr;gap:15px}
-        .stat-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
-        .quick-actions{margin-top:20px}
-        .quick-actions a{display:block;background:#007bff;color:#fff;padding:12px;text-decoration:none;border-radius:4px;text-align:center;margin-bottom:8px}
-        .quick-actions a:hover{background:#0056b3}
-        .status-submitted{color:#28a745;font-weight:bold}
-        .status-overdue{color:#dc3545;font-weight:bold}
-        .submit-btn{background:#28a745;color:#fff;padding:6px 12px;text-decoration:none;border-radius:4px;font-size:12px}
-        .submit-btn:hover{background:#218838}
-        .empty-state{text-align:center;color:#666;padding:30px}
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
-<nav class="navbar">
-    <div class="brand">📚 Student Dashboard</div>
-    <div>
-        <span>Hello, <?=htmlspecialchars($user['full_name'])?></span>
-        <a href="../logout.php">Logout</a>
-    </div>
-</nav>
-
-<div class="container">
-    <div class="welcome-box">
-        <h1>Welcome back, <?=htmlspecialchars($user['full_name'])?>!</h1>
-        <p>Ready to continue your learning journey?</p>
-    </div>
-
-    <div class="content">
-        <div>
-            <div class="box">
-                <div class="flex justify-between items-center mb-4">
-                    <h2>My Courses</h2>
-                    <a href="browse-courses.php" class="text-green-700 hover:text-green-900">Browse More</a>
+<body class="bg-gray-50">
+    <!-- Simple Header -->
+    <header class="bg-white border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-800">Student Dashboard</h1>
+                    <p class="text-sm text-gray-600">Hello, <?=htmlspecialchars($user['full_name'])?></p>
                 </div>
-                <?php if (empty($courses)): ?>
-                    <div class="empty-state">
-                        <p>You're not enrolled in any courses yet.</p>
-                        <a href="browse-courses.php" class="submit-btn">Find Courses</a>
+                <a href="../logout.php" class="text-red-600 hover:text-red-800 text-sm font-medium">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg p-5 mb-6 text-center">
+            <h2 class="text-xl font-semibold mb-2">Welcome back, <?=htmlspecialchars($user['full_name'])?>!</h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- My Courses -->
+                <div class="bg-white rounded-lg border p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-800">My Courses</h3>
+                        <a href="browse-courses.php" class="text-green-600 hover:text-green-800 text-sm font-medium">Browse More</a>
                     </div>
-                <?php else: ?>
-                    <?php foreach ($courses as $course): ?>
-                        <div class="course-item">
-                            <h3><?=htmlspecialchars($course['title'])?></h3>
-                            <p style="color:#666;font-size:14px;margin:5px 0;"><?=htmlspecialchars($course['course_code'])?></p>
-                            <p style="color:#666;font-size:14px;margin:5px 0;">Teacher: <?=htmlspecialchars($course['teacher_name'])?></p>
-                            <div class="course-links">
-                                <a href="course.php?id=<?=$course['id']?>">Enter Course</a>
-                                <a href="../whiteboard.php?course_id=<?=$course['id']?>">Whiteboard</a>
-                                <a href="../chat.php?course_id=<?=$course['id']?>">Chat</a>
-                            </div>
+                    
+                    <?php if (empty($courses)): ?>
+                        <div class="text-center py-8">
+                            <div class="text-gray-400 text-4xl mb-3">📚</div>
+                            <p class="text-gray-600 text-sm mb-4">You're not enrolled in any courses yet.</p>
+                            <a href="browse-courses.php" class="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700">Find Courses</a>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-
-            <div class="box mt-5">
-                <h2>Recent Assignments</h2>
-                <?php if (empty($assignments)): ?>
-                    <div class="empty-state"><p>No assignments yet.</p></div>
-                <?php else: ?>
-                    <?php foreach ($assignments as $assignment): ?>
-                        <div class="assignment-item">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h3><?=htmlspecialchars($assignment['title'])?></h3>
-                                    <p style="color:#666;font-size:14px;margin:5px 0;"><?=htmlspecialchars($assignment['course_title'])?></p>
-                                    <p style="color:#666;font-size:12px;margin:5px 0;">Due: <?=formatDateTime($assignment['due_date'])?></p>
+                    <?php else: ?>
+                        <div class="space-y-4">
+                            <?php foreach ($courses as $course): ?>
+                                <div class="border rounded p-4">
+                                    <h4 class="font-medium text-gray-800"><?=htmlspecialchars($course['title'])?></h4>
+                                    <p class="text-gray-600 text-sm"><?=htmlspecialchars($course['course_code'])?></p>
+                                    <p class="text-gray-600 text-sm">Teacher: <?=htmlspecialchars($course['teacher_name'])?></p>
+                                    <div class="flex space-x-2 mt-3">
+                                        <a href="course.php?id=<?=$course['id']?>" class="bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-blue-700">Enter Course</a>
+                                        
+                                    </div>
                                 </div>
-                                <div>
-                                    <?php if ($assignment['submitted_at']): ?>
-                                        <span class="status-submitted">Submitted</span>
-                                        <?php if ($assignment['points_awarded']): ?>
-                                            <div style="font-size:12px;margin-top:5px;">Score: <?=$assignment['points_awarded']?>%</div>
-                                        <?php endif; ?>
-                                    <?php elseif (strtotime($assignment['due_date']) < time()): ?>
-                                        <span class="status-overdue">Overdue</span>
-                                    <?php else: ?>
-                                        <a href="assignment.php?id=<?=$assignment['id']?>" class="submit-btn">Submit</a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
-                    <?php endforeach;?>
-                <?php endif; ?>
-            </div>
-        </div>
+                    <?php endif; ?>
+                </div>
 
-        <div>
-            <div class="box">
-                <h2>Quick Stats</h2>
-                <div class="stats-grid">
-                    <div class="stat-item"><span>Enrolled Courses</span><strong><?=count($courses)?></strong></div>
-                    <div class="stat-item"><span>Pending Assignments</span><strong><?=count(array_filter($assignments, fn($a)=>!$a['submitted_at'] && strtotime($a['due_date'])>time()))?></strong></div>
-                    <div class="stat-item"><span>Completed</span><strong><?=count(array_filter($assignments, fn($a)=>$a['submitted_at']))?></strong></div>
+                <!-- Recent Assignments -->
+                <div class="bg-white rounded-lg border p-5">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Recent Assignments</h3>
+                    
+                    <?php if (empty($assignments)): ?>
+                        <div class="text-center py-8">
+                            <div class="text-gray-400 text-4xl mb-3">📋</div>
+                            <p class="text-gray-600 text-sm">No assignments yet.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="space-y-4">
+                            <?php foreach ($assignments as $assignment): ?>
+                                <div class="border rounded p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium text-gray-800"><?=htmlspecialchars($assignment['title'])?></h4>
+                                            <p class="text-gray-600 text-sm"><?=htmlspecialchars($assignment['course_title'])?></p>
+                                            <p class="text-gray-600 text-xs mt-1">Due: <?=formatDateTime($assignment['due_date'])?></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <?php if ($assignment['submitted_at']): ?>
+                                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-medium">Submitted</span>
+                                                <?php if ($assignment['points_awarded']): ?>
+                                                    <div class="text-blue-600 text-sm mt-1">Score: <?=$assignment['points_awarded']?>%</div>
+                                                <?php endif; ?>
+                                            <?php elseif (strtotime($assignment['due_date']) < time()): ?>
+                                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-medium">Overdue</span>
+                                            <?php else: ?>
+                                                <a href="assignment.php?id=<?=$assignment['id']?>" class="bg-green-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-green-700">Submit</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <div class="box quick-actions mt-5">
-                <h2>Quick Actions</h2>
-                <a href="browse-courses.php">Browse Courses</a>
-                <a href="my-submissions.php">My Submissions</a>
-                <a href="profile.php">Edit Profile</a>
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Quick Stats -->
+                <div class="bg-white rounded-lg border p-5">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Stats</h3>
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Enrolled Courses</span>
+                            <span class="font-medium"><?=count($courses)?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Pending Assignments</span>
+                            <span class="font-medium text-blue-600"><?=count(array_filter($assignments, fn($a)=>!$a['submitted_at'] && strtotime($a['due_date'])>time()))?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Completed</span>
+                            <span class="font-medium text-green-600"><?=count(array_filter($assignments, fn($a)=>$a['submitted_at']))?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg border p-5">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="browse-courses.php" class="block w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 text-center">Browse Courses</a>                       
+                        <a href="my-submissions.php" class="block w-full bg-green-600 text-white py-2 rounded text-sm font-medium hover:bg-green-700 text-center">My Submissions</a>
+                        <a href="profile.php" class="block w-full bg-gray-600 text-white py-2 rounded text-sm font-medium hover:bg-gray-700 text-center">Edit Profile</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>

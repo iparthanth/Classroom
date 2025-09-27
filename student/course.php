@@ -78,12 +78,6 @@ $flash = getFlash();
                         <div>Enrolled: <?=formatDateTime($enrollment['enrolled_at'])?></div>
                     </div>
                 </div>
-                <div class="flex flex-col space-y-2 ml-4">
-                    <a href="../whiteboard.php?course_id=<?= $courseId ?>" 
-                       class="bg-green-600 text-white px-3 py-2 rounded text-sm font-medium hover:bg-green-700 text-center">Whiteboard</a>
-                    <a href="../chat.php?course_id=<?= $courseId ?>" 
-                       class="bg-gray-600 text-white px-3 py-2 rounded text-sm font-medium hover:bg-gray-700 text-center">Chat</a>
-                </div>
             </div>
         </div>
 
@@ -200,8 +194,7 @@ $flash = getFlash();
                 <div class="bg-white rounded-lg border p-5">
                     <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h3>
                     <div class="space-y-3">
-                        <a href="../whiteboard.php?course_id=<?=$courseId?>" class="block w-full bg-green-600 text-white py-2 rounded text-sm font-medium hover:bg-green-700 text-center">Whiteboard</a>
-                        <a href="../chat.php?course_id=<?=$courseId?>" class="block w-full bg-gray-600 text-white py-2 rounded text-sm font-medium hover:bg-gray-700 text-center">Chat</a>
+                        
                         <a href="my-submissions.php" class="block w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 text-center">My Submissions</a>
                         <a href="dashboard.php" class="block w-full bg-gray-200 text-gray-700 py-2 rounded text-sm font-medium hover:bg-gray-300 text-center">Dashboard</a>
                     </div>

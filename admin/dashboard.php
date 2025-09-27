@@ -174,8 +174,7 @@ $flash = getFlash();
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
                 <a href="users.php"        class="btn btn-blue">Manage Users</a>
                 <a href="courses.php"      class="btn btn-green">Manage Courses</a>
-                <a href="reports.php"      class="btn btn-purple">View Reports</a>
-                <a href="settings.php"     class="btn btn-gray">System Settings</a>
+                
             </div>
         </div>
     </div>
