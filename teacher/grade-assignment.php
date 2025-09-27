@@ -64,7 +64,7 @@ $flash = getFlash();
     <title>Grade Assignment - <?php echo htmlspecialchars($assignment['title']); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+       
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>

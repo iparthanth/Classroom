@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && $_POST['action']==='submit' && !$subm
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+       
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
