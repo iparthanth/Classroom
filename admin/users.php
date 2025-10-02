@@ -100,7 +100,7 @@ $flash  = getFlash();
 </head>
 <body>
 <nav class="navbar">
-    <div class="brand"><div class="brand-icon">👥</div>Manage Users</div>
+    <div class="brand"><div class=""></div>Manage Users</div>
     <div>
         <span style="color:#666">Admin: <?=htmlspecialchars($current['full_name'])?></span>
         <a href="dashboard.php">Dashboard</a>
