@@ -63,7 +63,6 @@ $assignments = $db->fetchAll("
                 <div class="bg-white rounded-lg border p-5">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-800">My Courses</h3>
-                        <a href="browse-courses.php" class="text-green-600 hover:text-green-800 text-sm font-medium">Browse More</a>
                     </div>
                     
                     <?php if (empty($courses)): ?>
@@ -89,65 +88,13 @@ $assignments = $db->fetchAll("
                     <?php endif; ?>
                 </div>
 
-                <!-- Recent Assignments -->
-                <div class="bg-white rounded-lg border p-5">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Recent Assignments</h3>
-                    
-                    <?php if (empty($assignments)): ?>
-                        <div class="text-center py-8">
-                            <div class="text-gray-400 text-4xl mb-3">📋</div>
-                            <p class="text-gray-600 text-sm">No assignments yet.</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="space-y-4">
-                            <?php foreach ($assignments as $assignment): ?>
-                                <div class="border rounded p-4">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="font-medium text-gray-800"><?=htmlspecialchars($assignment['title'])?></h4>
-                                            <p class="text-gray-600 text-sm"><?=htmlspecialchars($assignment['course_title'])?></p>
-                                            <p class="text-gray-600 text-xs mt-1">Due: <?=formatDateTime($assignment['due_date'])?></p>
-                                        </div>
-                                        <div class="text-right">
-                                            <?php if ($assignment['submitted_at']): ?>
-                                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-medium">Submitted</span>
-                                                <?php if ($assignment['points_awarded']): ?>
-                                                    <div class="text-blue-600 text-sm mt-1">Score: <?=$assignment['points_awarded']?>%</div>
-                                                <?php endif; ?>
-                                            <?php elseif (strtotime($assignment['due_date']) < time()): ?>
-                                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-medium">Overdue</span>
-                                            <?php else: ?>
-                                                <a href="assignment.php?id=<?=$assignment['id']?>" class="bg-green-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-green-700">Submit</a>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                
             </div>
 
             <!-- Sidebar -->
             <div class="space-y-6">
                 <!-- Quick Stats -->
-                <div class="bg-white rounded-lg border p-5">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Stats</h3>
-                    <div class="space-y-3 text-sm text-gray-700">
-                        <div class="flex justify-between">
-                            <span>Enrolled Courses</span>
-                            <span class="font-medium"><?=count($courses)?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Pending Assignments</span>
-                            <span class="font-medium text-blue-600"><?=count(array_filter($assignments, fn($a)=>!$a['submitted_at'] && strtotime($a['due_date'])>time()))?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Completed</span>
-                            <span class="font-medium text-green-600"><?=count(array_filter($assignments, fn($a)=>$a['submitted_at']))?></span>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <!-- Quick Actions -->
                 <div class="bg-white rounded-lg border p-5">

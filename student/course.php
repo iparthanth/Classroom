@@ -166,59 +166,7 @@ $flash = getFlash();
             </div>
 
             <!-- Sidebar -->
-            <div class="space-y-6">
-                <!-- Progress -->
-                <div class="bg-white rounded-lg border p-5">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Assignment Progress</h3>
-                    <div class="space-y-3 text-sm text-gray-700">
-                        <div class="flex justify-between">
-                            <span>Total Assignments</span>
-                            <span class="font-medium"><?=count($assignments)?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Submitted</span>
-                            <span class="font-medium text-green-600"><?=count(array_filter($assignments, fn($a)=>$a['submitted_at']))?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Pending</span>
-                            <span class="font-medium text-blue-600"><?=count(array_filter($assignments, fn($a)=>!$a['submitted_at'] && strtotime($a['due_date'])>time()))?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Overdue</span>
-                            <span class="font-medium text-red-600"><?=count(array_filter($assignments, fn($a)=>!$a['submitted_at'] && strtotime($a['due_date'])<time()))?></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="bg-white rounded-lg border p-5">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Actions</h3>
-                    <div class="space-y-3">
-                        
-                        <a href="my-submissions.php" class="block w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 text-center">My Submissions</a>
-                        <a href="dashboard.php" class="block w-full bg-gray-200 text-gray-700 py-2 rounded text-sm font-medium hover:bg-gray-300 text-center">Dashboard</a>
-                    </div>
-                </div>
-
-                <!-- Course Info -->
-                <div class="bg-white rounded-lg border p-5">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Course Information</h3>
-                    <div class="space-y-2 text-sm text-gray-700">
-                        <div class="flex justify-between">
-                            <span>Code:</span>
-                            <span class="font-medium"><?=htmlspecialchars($enrollment['course_code'])?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Instructor:</span>
-                            <span class="font-medium"><?=htmlspecialchars($enrollment['teacher_name'])?></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Enrolled:</span>
-                            <span class="font-medium"><?=date('M j, Y', strtotime($enrollment['enrolled_at']))?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </body>
