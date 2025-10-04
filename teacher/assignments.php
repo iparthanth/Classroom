@@ -24,32 +24,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'create_assign
     $due_date = $_POST['due_date'] ?? '';
     $max_points = (int)($_POST['max_points'] ?? 100);
     $file_required = isset($_POST['file_required']) ? 1 : 0;
-    
+    $relative_path = null;
+
+    if (isset($_FILES['assignment_file']) && $_FILES['assignment_file']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['assignment_file'];
+        $allowed_types = ['pdf', 'doc', 'docx', 'txt', 'jpg', 'jpeg', 'png'];
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        if (in_array($file_ext, $allowed_types)) {
+            $upload_dir = '../uploads/assignments/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+            $file_name = uniqid('', true) . '.' . $file_ext;
+            $relative_path = 'uploads/assignments/' . $file_name;
+            $absolute_path = $upload_dir . $file_name;
+
+            if (!move_uploaded_file($file['tmp_name'], $absolute_path)) {
+                setFlash('error', 'Failed to upload file.');
+                $relative_path = null;
+            }
+        } else {
+            setFlash('error', 'Invalid file type. Allowed types: pdf, doc, docx, txt, jpg, jpeg, png.');
+        }
+    }
+
     if (!empty($title) && !empty($due_date)) {
         try {
-            $db->executeQuery(
-                "INSERT INTO assignments (course_id, title, description, due_date, max_points, file_required) VALUES (?, ?, ?, ?, ?, ?)",
-                [$course_id, $title, $description, $due_date, $max_points, $file_required]
+            // Prepare data
+            $data = [
+                'course_id' => $course_id,
+                'title' => $title,
+                'description' => $description,
+                'due_date' => $due_date,
+                'max_points' => $max_points,
+                'file_required' => $file_required,
+                'file_path' => $relative_path
+            ];
+
+            // Debug log
+            error_log("Creating assignment with data: " . print_r($data, true));
+
+            // Build query
+            $fields = array_keys($data);
+            $placeholders = array_fill(0, count($fields), '?');
+            $query = sprintf(
+                "INSERT INTO assignments (%s) VALUES (%s)",
+                implode(', ', $fields),
+                implode(', ', $placeholders)
             );
-            setFlash('success', 'Assignment created successfully!');
+
+            // Execute query
+            $stmt = $db->prepare($query);
+            $result = $stmt->execute(array_values($data));
+
+            if ($result) {
+                setFlash('success', 'Assignment created successfully!');
+                error_log("Assignment created successfully with ID: " . $db->lastInsertId());
+            } else {
+                $error = $stmt->errorInfo();
+                throw new Exception("Database error: " . ($error[2] ?? 'Unknown error'));
+            }
         } catch (Exception $e) {
+            error_log("Assignment creation failed: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             setFlash('error', 'Failed to create assignment: ' . $e->getMessage());
         }
     } else {
         setFlash('error', 'Title and due date are required');
     }
-    
+
     redirect('/teacher/assignments.php?course_id=' . $course_id);
 }
 
-// Get assignments for this course
+// Get assignments with submission counts
 $assignments = $db->fetchAll(
     "SELECT a.*, 
-     (SELECT COUNT(*) FROM submissions WHERE assignment_id = a.id) as submission_count,
-     (SELECT COUNT(*) FROM enrollments WHERE course_id = a.course_id) as total_students
-     FROM assignments a 
-     WHERE a.course_id = ? 
-     ORDER BY a.due_date DESC",
+        (SELECT COUNT(*) FROM submissions s WHERE s.assignment_id = a.id) as submission_count,
+        (SELECT COUNT(*) FROM enrollments e WHERE e.course_id = a.course_id AND e.status = 'active') as total_students
+    FROM assignments a 
+    WHERE a.course_id = ? 
+    ORDER BY a.due_date DESC, a.created_at DESC",
     [$course_id]
 );
 
@@ -153,6 +208,9 @@ $flash = getFlash();
                                        class="bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-blue-700 inline-block">
                                         View Submissions
                                     </a>
+                                    <?php if ($assignment['file_path']): ?>
+                                        <a href="../<?php echo htmlspecialchars($assignment['file_path']); ?>" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Attachment</a>
+                                    <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -172,7 +230,7 @@ $flash = getFlash();
                 <button onclick="hideCreateAssignment()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
             </div>
             
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create_assignment">
                 
                 <div class="space-y-4">
@@ -186,6 +244,12 @@ $flash = getFlash();
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea name="description" placeholder="Assignment instructions and details..." 
                                   class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-20"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Assignment File (Optional)</label>
+                        <input type="file" name="assignment_file" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-3">

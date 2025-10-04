@@ -39,10 +39,8 @@ if ($_POST && $_POST['action'] === 'grade_submission') {
     
     if ($submission_id && $points >= 0 && $points <= $assignment['max_points']) {
         try {
-            $db->query(
-                "UPDATE submissions SET points_awarded = ?, feedback = ?, graded_at = NOW(), graded_by = ? WHERE id = ?",
-                [$points, $feedback, $user['id'], $submission_id]
-            );
+            $stmt = $db->prepare("UPDATE submissions SET points_awarded = ?, feedback = ?, graded_at = NOW(), graded_by = ? WHERE id = ?");
+            $stmt->execute([$points, $feedback, $user['id'], $submission_id]);
             setFlash('success', 'Grade saved successfully!');
             redirect("/teacher/grade-assignment.php?id=$assignment_id");
         } catch (Exception $e) {

@@ -120,6 +120,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && $_POST['action']==='submit' && !$subm
             <div class="border-t pt-4">
                 <h3 class="font-medium text-gray-700 mb-2">Instructions</h3>
                 <p class="text-gray-600"><?= htmlspecialchars($assignment['description'] ?: 'No instructions provided.') ?></p>
+                <?php if ($assignment['file_path']): ?>
+                    <div class="mt-4">
+                        <a href="../download.php?file=<?= urlencode($assignment['file_path']) ?>" class="text-blue-600 hover:underline">Download Assignment File</a>
+                    </div>
+                <?php endif; ?>
                 <?php if($assignment['file_required']): ?>
                     <div class="mt-3 text-sm text-blue-600">📎 File upload required</div>
                 <?php endif; ?>

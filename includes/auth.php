@@ -104,7 +104,7 @@ class Auth {
     
     public function requireLogin() {
         if (!$this->isLoggedIn()) {
-            header('Location: /Edu-Home-Virtual-Classroom/login.php');
+            header('Location: /Classroom/login.php');
             exit();
         }
     }
@@ -112,7 +112,7 @@ class Auth {
     public function requireRole($role) {
         $this->requireLogin();
         if (!$this->hasRole($role)) {
-            header('Location: /Edu-Home-Virtual-Classroom/dashboard.php');
+            header('Location: /Classroom/dashboard.php');
             exit();
         }
     }

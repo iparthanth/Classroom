@@ -6,54 +6,64 @@ require_once __DIR__ . '/includes/functions.php';
 $auth->requireLogin();
 $user = $auth->getCurrentUser();
 
-// Get file ID and verify permission
-$submission_id = (int)($_GET['id'] ?? 0);
+$file_path = null;
+$file_name = null;
 
-// Get submission details
-$submission = null;
-if ($user['role'] === 'teacher') {
-    // Teachers can access files from their courses
-    $submission = $db->fetchOne(
-        "SELECT s.*, a.course_id, c.teacher_id, a.title as assignment_title,
-                u.full_name as student_name
-         FROM submissions s 
-         JOIN assignments a ON s.assignment_id = a.id 
-         JOIN courses c ON a.course_id = c.id 
-         JOIN users u ON s.student_id = u.id
-         WHERE s.id = ? AND c.teacher_id = ?",
-        [$submission_id, $user['id']]
+if (isset($_GET['file'])) {
+    $file = $_GET['file'];
+    // This is for assignment files
+    // Need to verify that the user has access to the course
+    $assignment = $db->fetchOne(
+        "SELECT a.* FROM assignments a JOIN enrollments e ON a.course_id = e.course_id WHERE a.file_path = ? AND e.student_id = ?",
+        [$file, $user['id']]
     );
-} elseif ($user['role'] === 'student') {
-    // Students can only access their own files
-    $submission = $db->fetchOne(
-        "SELECT s.*, a.title as assignment_title, u.full_name as student_name 
-         FROM submissions s 
-         JOIN assignments a ON s.assignment_id = a.id
-         JOIN users u ON s.student_id = u.id
-         WHERE s.id = ? AND s.student_id = ?",
-        [$submission_id, $user['id']]
-    );
-} else {
-    // Admin can access all files
-    $submission = $db->fetchOne(
-        "SELECT s.*, a.title as assignment_title, u.full_name as student_name
-         FROM submissions s 
-         JOIN assignments a ON s.assignment_id = a.id
-         JOIN users u ON s.student_id = u.id
-         WHERE s.id = ?",
-        [$submission_id]
-    );
+
+    if ($assignment) {
+        $file_path = __DIR__ . '/uploads/assignments/' . basename($assignment['file_path']);
+        $file_name = $assignment['title'] . '.' . pathinfo($file_path, PATHINFO_EXTENSION);
+    }
+} elseif (isset($_GET['id'])) {
+    // This is for submission files
+    $submission_id = (int)($_GET['id'] ?? 0);
+    $submission = null;
+    if ($user['role'] === 'teacher') {
+        $submission = $db->fetchOne(
+            "SELECT s.*, a.course_id, c.teacher_id, a.title as assignment_title,
+                    u.full_name as student_name
+             FROM submissions s 
+             JOIN assignments a ON s.assignment_id = a.id 
+             JOIN courses c ON a.course_id = c.id 
+             JOIN users u ON s.student_id = u.id
+             WHERE s.id = ? AND c.teacher_id = ?",
+            [$submission_id, $user['id']]
+        );
+    } elseif ($user['role'] === 'student') {
+        $submission = $db->fetchOne(
+            "SELECT s.*, a.title as assignment_title, u.full_name as student_name 
+             FROM submissions s 
+             JOIN assignments a ON s.assignment_id = a.id
+             JOIN users u ON s.student_id = u.id
+             WHERE s.id = ? AND s.student_id = ?",
+            [$submission_id, $user['id']]
+        );
+    } else {
+        $submission = $db->fetchOne(
+            "SELECT s.*, a.title as assignment_title, u.full_name as student_name
+             FROM submissions s 
+             JOIN assignments a ON s.assignment_id = a.id
+             JOIN users u ON s.student_id = u.id
+             WHERE s.id = ?",
+            [$submission_id]
+        );
+    }
+
+    if ($submission && $submission['file_path']) {
+        $file_path = __DIR__ . '/uploads/' . $submission['file_path'];
+        $file_name = $submission['assignment_title'] . '_' . $submission['student_name'] . '.' . pathinfo($file_path, PATHINFO_EXTENSION);
+    }
 }
 
-if (!$submission || !$submission['file_path']) {
-    header('HTTP/1.0 404 Not Found');
-    echo 'File not found';
-    exit;
-}
-
-$file_path = __DIR__ . '/uploads/' . $submission['file_path'];
-
-if (!file_exists($file_path)) {
+if (!$file_path || !file_exists($file_path)) {
     header('HTTP/1.0 404 Not Found');
     echo 'File not found';
     exit;
@@ -80,9 +90,7 @@ if (ob_get_level()) {
 
 // Set headers for file download
 header('Content-Type: ' . $content_type);
-header('Content-Disposition: inline; filename="' . 
-    $submission['assignment_title'] . '_' . 
-    $submission['student_name'] . '.' . $extension . '"');
+header('Content-Disposition: inline; filename="' . $file_name . '"');
 header('Content-Length: ' . filesize($file_path));
 header('Cache-Control: no-cache, must-revalidate');
 header('Pragma: no-cache');

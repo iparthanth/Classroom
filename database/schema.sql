@@ -53,6 +53,7 @@ CREATE TABLE assignments (
     description TEXT,
     due_date DATETIME NOT NULL,
     max_points INT DEFAULT 100,
+    file_path VARCHAR(255) DEFAULT NULL,
     file_required BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
@@ -121,8 +122,11 @@ CREATE TABLE course_materials (
     description TEXT,
     file_path VARCHAR(500),
     material_type ENUM('document', 'video', 'link', 'other') DEFAULT 'document',
+    assignment_id INT NULL,
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
+    INDEX idx_assignment_materials (assignment_id)
 );
 
 -- System notifications
