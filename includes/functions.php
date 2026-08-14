@@ -93,7 +93,15 @@ function baseUrl() {
  * Redirect to a URL
  */
 function redirect($path) {
-    header('Location: ' . baseUrl() . $path);
+    $base = rtrim(baseUrl(), '/');
+    if ($path === '') {
+        $location = $base . '/';
+    } elseif (strpos($path, '/') === 0) {
+        $location = $base . $path;
+    } else {
+        $location = $base . '/' . $path;
+    }
+    header('Location: ' . $location);
     exit();
 }
 
