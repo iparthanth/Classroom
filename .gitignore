@@ -6,6 +6,7 @@
 
 # Configuration files that might contain sensitive information
 config/*.php
+!config/database.php
 
 # Dependency directories
 vendor/
