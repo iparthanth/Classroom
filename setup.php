@@ -23,15 +23,15 @@ DROP TABLE IF EXISTS users;
 
 $sql = file_get_contents(__DIR__ . '/database/schema.sql');
 $sql = preg_replace('/^\s*--.*$/m', '', $sql);
-$sql = preg_replace('/DROP DATABASE[^;]*;/i', '', $sql);
-$sql = preg_replace('/CREATE DATABASE[^;]*;/i', '', $sql);
-$sql = preg_replace('/USE[^;]*;/i', '', $sql);
 
 $statements = array_filter(array_map('trim', explode(';', $prelude . $sql)));
 
 try {
     foreach ($statements as $statement) {
         if ($statement === '') {
+            continue;
+        }
+        if (preg_match('/^\s*(DROP DATABASE|CREATE DATABASE|USE)\b/i', $statement)) {
             continue;
         }
         $db->exec($statement);
