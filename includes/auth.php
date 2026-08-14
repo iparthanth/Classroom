@@ -7,6 +7,7 @@
 session_start();
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/functions.php';
 
 class Auth {
     private $db;
@@ -104,16 +105,14 @@ class Auth {
     
     public function requireLogin() {
         if (!$this->isLoggedIn()) {
-            header('Location: /Classroom/login.php');
-            exit();
+            redirect('/index.php');
         }
     }
     
     public function requireRole($role) {
         $this->requireLogin();
         if (!$this->hasRole($role)) {
-            header('Location: /Classroom/dashboard.php');
-            exit();
+            redirect('/dashboard.php');
         }
     }
 }

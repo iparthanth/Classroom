@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/functions.php';
 session_start();
 
 // Clear all session data
@@ -11,6 +12,6 @@ header('Pragma: no-cache');
 header('Expires: 0');
 
 // Redirect to index page
-header('Location: /Classroom/index.php');
+redirect('/index.php');
 exit();
 ?>
