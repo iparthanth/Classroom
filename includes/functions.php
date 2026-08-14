@@ -68,12 +68,23 @@ function sanitizeInput($input) {
 }
 
 /**
+ * Get the base path of the application (e.g. "/Classroom/" locally, "/" on a root domain)
+ */
+function appBasePath() {
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (strpos($scriptName, '/Classroom/') === 0) {
+        return '/Classroom/';
+    }
+    return '/';
+}
+
+/**
  * Get the base URL of the application
  */
 function baseUrl() {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
-    $basePath = '/Classroom/';
+    $basePath = appBasePath();
     
     return $protocol . '://' . $host . $basePath;
 }
@@ -91,10 +102,10 @@ function redirect($path) {
  */
 function currentPath() {
     $path = $_SERVER['REQUEST_URI'];
-    $basePath = '/Classroom';
+    $basePath = rtrim(appBasePath(), '/');
     
     // Remove base path from URL
-    if (strpos($path, $basePath) === 0) {
+    if ($basePath !== '' && strpos($path, $basePath) === 0) {
         $path = substr($path, strlen($basePath));
     }
     
